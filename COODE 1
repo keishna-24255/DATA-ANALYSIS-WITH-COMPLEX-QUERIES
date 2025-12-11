@@ -1,0 +1,66 @@
+CREATE TABLE employees (
+    emp_id INT,
+    name VARCHAR(50),
+    department VARCHAR(50),
+    salary INT,
+    join_date DATE
+);
+
+INSERT INTO employees VALUES
+(1, 'Rahul', 'IT', 50000, '2020-01-10'),
+(2, 'Neha', 'HR', 45000, '2021-03-15'),
+(3, 'Aman', 'Finance', 60000, '2019-07-19'),
+(4, 'Riya', 'IT', 55000, '2022-02-01'),
+(5, 'Karan', 'Finance', 70000, '2018-11-23');
+
+----------------------------------------------------------
+-- 1. Window Function (WORKS IN SQL SERVER)
+----------------------------------------------------------
+SELECT 
+    name,
+    department,
+    salary,
+    RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS salary_rank
+FROM employees;
+
+----------------------------------------------------------
+-- 2. Subquery
+----------------------------------------------------------
+SELECT name, salary
+FROM employees
+WHERE salary > (SELECT AVG(salary) FROM employees);
+
+----------------------------------------------------------
+-- 3. CTE (SQL SERVER version)
+----------------------------------------------------------
+WITH exp_calc AS (
+    SELECT 
+        name,
+        department,
+        salary,
+        YEAR(GETDATE()) - YEAR(join_date) AS experience
+    FROM employees
+)
+SELECT * FROM exp_calc;
+
+----------------------------------------------------------
+-- 4. CTE + Window Function
+----------------------------------------------------------
+WITH dept_salary AS (
+    SELECT 
+        name,
+        department,
+        salary,
+        RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS rnk
+    FROM employees
+)
+SELECT name, department, salary
+FROM dept_salary
+WHERE rnk = 1;
+
+----------------------------------------------------------
+-- 5. Top 2 highest-paid employees (SQL Server uses TOP)
+----------------------------------------------------------
+SELECT TOP 2 name, salary 
+FROM employees
+ORDER BY salary DESC;
