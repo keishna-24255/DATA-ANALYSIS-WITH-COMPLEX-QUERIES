@@ -29,3 +29,4 @@ Through this project, I learned:
 
 #OUTPUT
 
+<img width="750" height="672" alt="Image" src="https://github.com/user-attachments/assets/71a00b6e-126d-4232-8483-cf7c8cb144ca" />
